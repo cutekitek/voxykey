@@ -1,0 +1,6 @@
+.ruff_cache
+.uv_cache
+.venv
+.vscode
+models
+__pycache__

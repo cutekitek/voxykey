@@ -1,0 +1,56 @@
+Metadata-Version: 2.4
+Name: voxykey
+Version: 0.1.0
+Summary: Local speech-to-text translation keyboard tray app
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: pystray>=0.19.5
+Requires-Dist: Pillow>=10.0.0
+Requires-Dist: sounddevice>=0.5.0
+Requires-Dist: numpy>=1.26.0
+Requires-Dist: faster-whisper>=1.0.0
+Requires-Dist: ctranslate2>=4.5.0
+Requires-Dist: transformers>=4.40.0
+Requires-Dist: huggingface-hub>=0.24.0
+Requires-Dist: torch>=2.2.0
+Requires-Dist: sentencepiece>=0.2.0
+Requires-Dist: pynput>=1.7.7
+Requires-Dist: pyperclip>=1.8.2
+Requires-Dist: platformdirs>=4.2.0
+Requires-Dist: tomli_w>=1.0.0
+
+# VoxyKey
+
+Local tray app for speech-to-text keyboard input with translation.
+
+## Current status
+Initial scaffold is implemented:
+- Tray app (no GUI window) via `pystray`
+- Config file load/save (`toml`)
+- Global hotkeys:
+  - `hotkey.trigger` for one-shot capture
+  - `hotkey.push_to_talk_key` for hold-to-record
+- Pipeline wiring for audio -> STT -> translation -> text injection
+- Tray language selector (target language) persisted to config
+- Translation uses OPUS-MT (`Helsinki-NLP/opus-mt-*`) models
+- Missing translation model(s) are downloaded at startup into local `models/`
+
+## Run
+```bash
+uv sync
+uv run voxykey
+```
+
+## Tray controls
+- `Capture now`: one-shot fixed duration recording.
+- `Target language`: switch output language (saved to config).
+- `Reload config`: reload `config.toml`.
+
+## Default hotkeys
+- One-shot: `Ctrl+Shift+Space`
+- Push-to-talk: `F8` (hold to record, release to transcribe/translate/type)
+
+## Config path
+- Linux: `~/.config/voxykey/config.toml`
+- macOS: `~/Library/Application Support/voxykey/config.toml`
+- Windows: `%APPDATA%\\voxykey\\config.toml`

@@ -1,0 +1,14 @@
+pystray>=0.19.5
+Pillow>=10.0.0
+sounddevice>=0.5.0
+numpy>=1.26.0
+faster-whisper>=1.0.0
+ctranslate2>=4.5.0
+transformers>=4.40.0
+huggingface-hub>=0.24.0
+torch>=2.2.0
+sentencepiece>=0.2.0
+pynput>=1.7.7
+pyperclip>=1.8.2
+platformdirs>=4.2.0
+tomli_w>=1.0.0
