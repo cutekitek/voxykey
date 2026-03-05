@@ -35,6 +35,8 @@ class Pipeline:
             source_lang=cfg.translation.source_lang,
             target_lang=cfg.translation.target_lang,
             models_dir=cfg.translation.models_dir,
+            device=cfg.translation.device,
+            compute_type=cfg.translation.compute_type,
         )
         self.translator.prepare_models()
         self.injector = TextInjector()

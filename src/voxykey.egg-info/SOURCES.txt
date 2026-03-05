@@ -1,4 +1,3 @@
-README.md
 pyproject.toml
 src/voxykey/__init__.py
 src/voxykey/__main__.py

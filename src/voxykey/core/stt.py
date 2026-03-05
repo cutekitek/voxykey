@@ -43,7 +43,7 @@ class SpeechToText:
         logger.debug("Transcription requested sample_rate=%d samples=%d", sample_rate, len(samples))
         self._ensure_model()
         assert self._model is not None
-        segments, _ = self._model.transcribe(samples, language=self.language)
+        segments, _ = self._model.transcribe(samples, language="ru")
         text = " ".join(segment.text.strip() for segment in segments).strip()
         print(text)
         logger.info("STT text length=%d", len(text))

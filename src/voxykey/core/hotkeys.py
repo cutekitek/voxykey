@@ -87,18 +87,17 @@ class HotkeyService:
     def _on_press(self, key: object) -> None:
         key_name = self._key_name(key)
         logger.debug("Key press detected: %s", key_name)
-        if key_name == self.push_to_talk_key and not self._ptt_pressed:
+        if key_name == "0" and not self._ptt_pressed:
             self._ptt_pressed = True
             logger.info("Push-to-talk start")
             self.on_ptt_start()
-
-    def _on_release(self, key: object) -> None:
-        key_name = self._key_name(key)
-        logger.debug("Key release detected: %s", key_name)
-        if key_name == self.push_to_talk_key and self._ptt_pressed:
+        elif key_name == "0" and self._ptt_pressed:
             self._ptt_pressed = False
             logger.info("Push-to-talk end")
             self.on_ptt_end()
+
+    def _on_release(self, key: object) -> None:
+        ...
 
     @staticmethod
     def _key_name(key: object) -> str:

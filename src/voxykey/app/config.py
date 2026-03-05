@@ -42,6 +42,8 @@ class TranslationConfig:
     source_lang: str = "ru"
     target_lang: str = "en"
     models_dir: str = "models"
+    device: str = "cpu"
+    compute_type: str = "int8"
 
 
 @dataclass(slots=True)
