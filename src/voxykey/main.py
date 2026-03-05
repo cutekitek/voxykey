@@ -81,15 +81,15 @@ class Application:
 
     def run(self) -> None:
         logger.info("Application run loop starting")
-        self.hotkeys.start()
         if self.tray is None:
             started = False
         else:
-            started = self.tray.run()
+            started = self.tray.run(on_started=self.hotkeys.start)
         if started:
             logger.info("Tray loop exited normally")
             return
         logger.warning("Running without tray icon; hotkeys remain active")
+        self.hotkeys.start()
         try:
             while not self._stop_event.is_set():
                 time.sleep(0.5)

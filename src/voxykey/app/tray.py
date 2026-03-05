@@ -41,10 +41,13 @@ class TrayApp:
         )
         logger.debug("Tray app initialized")
 
-    def run(self) -> bool:
-        logger.info("Starting tray icon")
+    def run(self, on_started: Callable[[], None] | None = None) -> bool:
+        logger.info("Starting tray icon on main thread")
         try:
-            self._icon.run()
+            if on_started is None:
+                self._icon.run()
+            else:
+                self._icon.run(setup=self._build_setup_callback(on_started))
             return True
         except Exception:
             logger.exception("Tray icon failed to start")
@@ -54,15 +57,15 @@ class TrayApp:
         logger.info("Stopping tray icon")
         self._icon.stop()
 
-    def _capture_now(self, _icon: pystray.Icon, _item: pystray.MenuItem) -> None:
+    def _capture_now(self, _icon: object, _item: object) -> None:
         logger.info("Tray action: capture now")
         threading.Thread(target=self.on_capture, daemon=True).start()
 
-    def _reload_config(self, _icon: pystray.Icon, _item: pystray.MenuItem) -> None:
+    def _reload_config(self, _icon: object, _item: object) -> None:
         logger.info("Tray action: reload config")
         self.on_reload()
 
-    def _quit(self, _icon: pystray.Icon, _item: pystray.MenuItem) -> None:
+    def _quit(self, _icon: object, _item: object) -> None:
         logger.info("Tray action: quit")
         self.on_quit()
         self._icon.stop()
@@ -73,19 +76,32 @@ class TrayApp:
             pystray.MenuItem("Capture now", self._capture_now),
             pystray.MenuItem(
                 "Target language",
-                pystray.Menu(*[self._lang_item(code, label) for code, label in self.TARGET_LANGUAGES.items()]),
+                pystray.Menu(
+                    *[self._lang_item(code, label) for code, label in self.TARGET_LANGUAGES.items()]
+                ),
             ),
             pystray.MenuItem("Reload config", self._reload_config),
             pystray.MenuItem("Quit", self._quit),
         )
 
     def _lang_item(self, code: str, label: str) -> pystray.MenuItem:
-        def _set_lang(_icon: pystray.Icon, _item: pystray.MenuItem) -> None:
+        def _set_lang(_icon: object, _item: object) -> None:
             logger.info("Tray action: set target language=%s", code)
             self.on_set_target_language(code)
             self._icon.update_menu()
 
-        return pystray.MenuItem(label, _set_lang, checked=lambda _item: self.get_target_language() == code)
+        return pystray.MenuItem(
+            label, _set_lang, checked=lambda _item: self.get_target_language() == code
+        )
+
+    def _build_setup_callback(self, on_started: Callable[[], None]) -> Callable[[object], None]:
+        def _setup(_icon: object) -> None:
+            try:
+                on_started()
+            except Exception:
+                logger.exception("Startup callback failed; continuing without hotkeys")
+
+        return _setup
 
     @staticmethod
     def _create_icon() -> Image.Image:

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import importlib
 import os
 import platform
 from typing import Callable
@@ -137,9 +138,3 @@ class HotkeyService:
     def _configure_backend_for_session() -> None:
         if platform.system().lower() != "linux":
             return
-        os.environ["PYNPUT_BACKEND_KEYBOARD"] = "uinput"
-        os.environ["PYNPUT_BACKEND_MOUSE"] = "dummy"
-        logger.info(
-            "Wayland session detected; defaulting keyboard backend to uinput "
-            "(override with PYNPUT_BACKEND_KEYBOARD)."
-        )
